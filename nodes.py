@@ -30,7 +30,7 @@ class MaskRefine:
             "required": {
                 "image": ("IMAGE",),
                 "mask": ("MASK",),
-                "preblur": ("INT", {"default": 8, "min": 0, "max": 256, "step": 1}),
+                "preblur": ("INT", {"default": 10, "min": 0, "max": 256, "step": 1}),
             },
         }
 
