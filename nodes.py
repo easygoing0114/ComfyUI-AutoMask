@@ -10,7 +10,7 @@ import folder_paths
 
 
 # ============================================================================
-# AutoMaskRefine
+# MaskRefine
 # ============================================================================
 
 DEFAULT_BLACKPOINT = 0.01
@@ -18,7 +18,7 @@ DEFAULT_WHITEPOINT = 0.99
 DEFAULT_MAX_ITERATIONS = 1000
 
 
-class AutoMaskRefine:
+class MaskRefine:
     """
     Node that refines an alpha matte from an image and a mask, with
     preblur as the only configurable setting.
@@ -401,7 +401,7 @@ class AutoMaskThreshold:
     CATEGORY = "mask/threshold"
     FUNCTION = "run"
     RETURN_TYPES = ("MASK", "MASK", "IMAGE")
-    RETURN_NAMES = ("mask_batch (x8)", "mask", "hist_image")
+    RETURN_NAMES = ("mask_batch (x8)", "mask", "histgram_image")
     OUTPUT_NODE = True
 
     BINS = 256
@@ -507,11 +507,11 @@ class AutoMaskThreshold:
 
 
 NODE_CLASS_MAPPINGS = {
-    "AutoMaskRefine": AutoMaskRefine,
+    "MaskRefine": MaskRefine,
     "AutoMaskThreshold": AutoMaskThreshold,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "AutoMaskRefine": "Auto Mask Refine",
+    "MaskRefine": "Mask Refine",
     "AutoMaskThreshold": "Auto Mask Threshold",
 }

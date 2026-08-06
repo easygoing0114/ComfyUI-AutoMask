@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-AutoMask"
 description = "Automatic mask refinement and histogram-based multi-threshold nodes for ComfyUI by easygoing0114"
-version = "0.1.2"
+version = "0.1.3"
 license = { text = "MIT" }
 
 [project.urls]
@@ -9,5 +9,5 @@ Repository = "https://github.com/easygoing0114/ComfyUI-AutoMask"
 
 [tool.comfy]
 PublisherId = "easygoing0114"
-DisplayName = "AutoMask"
+DisplayName = "Auto Mask"
 Icon = ""
