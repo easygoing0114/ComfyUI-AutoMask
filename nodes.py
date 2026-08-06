@@ -401,7 +401,7 @@ class AutoMaskThreshold:
     CATEGORY = "mask/threshold"
     FUNCTION = "run"
     RETURN_TYPES = ("MASK", "MASK", "IMAGE")
-    RETURN_NAMES = ("mask_batch (x8)", "mask", "histgram_image")
+    RETURN_NAMES = ("mask_batch (x8)", "mask", "histgram")
     OUTPUT_NODE = True
 
     BINS = 256
