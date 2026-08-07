@@ -90,7 +90,7 @@ pip install -r requirements.txt
 
 ## Credits
 
-- **Mask Refine** is a simplified reimplementation of the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl), reduced to a single `preblur` parameter.
+- **Mask Refine** is a simplified reimplementation of the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl).
 
 ## License
 
