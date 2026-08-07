@@ -1,3 +1,8 @@
+
+<div align="center">
+<img width="800" height="343" alt="ComfyUI AutoMask Nodes thumbnail" src="images/ComfyUI-AutoMask_banner_image.png">
+</div>
+
 # ComfyUI-AutoMask
 
 Custom nodes for ComfyUI that automatically refine and threshold masks — no manual trial-and-error with black/white points or fixed cutoff values.
