@@ -37,7 +37,7 @@ Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatt
   - `preblur` — `INT` (default `10`), Gaussian blur radius applied to the mask before it's converted into a trimap. Higher values soften hard mask edges before matting; `0` disables preblurring.
 - **Output**: `MASK` — a refined, soft alpha matte
 
-Use this after any rough segmentation (SAM, manual paint, threshold, etc.) to get cleaner edges, especially around hair, fur, or semi-transparent regions.
+Use this after any rough segmentation (SAM 3.1, BiRefNet, manual paint, threshold, etc.) to get cleaner edges, especially around hair, fur, or semi-transparent regions.
 
 ### Auto Mask Threshold
 
