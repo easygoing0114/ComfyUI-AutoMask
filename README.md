@@ -11,6 +11,10 @@ Custom nodes for ComfyUI that automatically refine and threshold masks — no ma
 
 ### Mask Refine
 
+<div align="center">
+<img width="800" height="666" alt="mask refine node sample" src="images/mask_refine_20260807.png">
+</div>
+
 Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatting`](https://github.com/pymatting/pymatting)), guided by the source image.
 
 > This node is a simplified implementation based on the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl), with `preblur` kept as the only exposed setting.
@@ -24,6 +28,10 @@ Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatt
 Use this after any rough segmentation (SAM, manual paint, threshold, etc.) to get cleaner edges, especially around hair, fur, or semi-transparent regions.
 
 ### Auto Mask Threshold
+
+<div align="center">
+<img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
+</div>
 
 Analyzes a soft mask's value histogram and automatically finds meaningful threshold boundaries (valleys between peaks) instead of requiring a manually chosen cutoff.
 
