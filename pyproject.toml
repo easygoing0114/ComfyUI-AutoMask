@@ -10,4 +10,5 @@ Repository = "https://github.com/easygoing0114/ComfyUI-AutoMask"
 [tool.comfy]
 PublisherId = "easygoing0114"
 DisplayName = "Auto Mask"
-Icon = ""
+Icon = "https://raw.githubusercontent.com/easygoing0114/ComfyUI-AutoMask/main/Images/ComfyUI-AutoMask_icon_image.png"
+Banner = "https://raw.githubusercontent.com/easygoing0114/ComfyUI-AutoMask/main/Images/ComfyUI-AutoMask_banner_image.png"
