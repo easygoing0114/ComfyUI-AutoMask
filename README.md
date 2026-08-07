@@ -53,7 +53,7 @@ Internally the node finds up to 5 valleys between histogram peaks plus up to 3 m
 
 ### Via ComfyUI Manager (recommended)
 
-Search for **"easygoing"** in ComfyUI Manager and install.
+Search for **"easygoing"** in Nodes Manager and install.
 
 <div align="center">
 <img width="600" height="278" alt="comfyui extension search easygoing" src="images/comfyui_extension_search_easygoing_with_comment.png">
@@ -61,14 +61,14 @@ Search for **"easygoing"** in ComfyUI Manager and install.
 
 ### Manual
 
+After enabling the ComfyUI Python virtual environment:
+
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/easygoing0114/ComfyUI-AutoMask.git
 cd ComfyUI-AutoMask
 pip install -r requirements.txt
 ```
-
-Then restart ComfyUI.
 
 ## Requirements
 
