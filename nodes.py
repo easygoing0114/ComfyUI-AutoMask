@@ -216,24 +216,54 @@ def _find_valley_boundary_for_region(hist: np.ndarray, region, prev_region_end):
     return search_from + best_local_idx
 
 
-def _find_minor_minima_in_largest_peak(hist: np.ndarray, region, n_minima: int = 3):
+def _find_minor_minima_in_largest_peak(hist: np.ndarray, region, n_minima: int = 3, min_area_frac: float = 0.05):
+    """
+    最大の山の中から、その山の面積の5%以上のプロミネンス（またはそれに準ずる重要度）を持つ
+    極小値を、より低い方（インデックスが小さい方）から優先して検出する。
+    """
     start, end = region
     if end <= start + 1:
         return []
 
-    sub_hist = hist[start:end + 1]
+    sub_hist = hist[start:end + 1].astype(np.float64)
+    peak_area = sub_hist.sum()
+    if peak_area <= 0:
+        return []
 
     raw_minima_local = _raw_local_minima(sub_hist)
-    scored = [(_topographic_prominence_for_minimum(sub_hist, idx), idx) for idx in raw_minima_local]
-    scored.sort(key=lambda x: (-x[0], x[1]))
-    chosen_local = sorted(idx for _, idx in scored[:n_minima])
-    chosen_global = [start + idx for idx in chosen_local]
+    if not raw_minima_local:
+        return _equally_spaced_fallback(start, end, n_minima)
 
-    if len(chosen_global) < n_minima:
+    # 各極小値のプロミネンスと、その谷が占める「面積的割合」または高さを評価
+    scored = []
+    for idx in raw_minima_local:
+        prom = _topographic_prominence_for_minimum(sub_hist, idx)
+        # 簡易的に、この極小値の深さが山全体の積分値や高さに対して十分か、あるいは単に低い方から探すためのスコア化
+        scored.append((prom, idx))
+
+    # 面積の5%相当をしきい値とする（プロミネンスの高さがピーク最大値あるいは総面積に対して一定以上）
+    sub_max = sub_hist.max()
+    threshold_height = sub_max * min_area_frac
+
+    # 条件を満たすものを抽出（満たさない場合でも最低限見つかるように配慮）
+    valid_minima = [idx for prom, idx in scored if prom >= threshold_height]
+
+    if not valid_minima:
+        # 5%を満たすものがない場合は、プロミネンスが大きい順にフォールバック
+        scored.sort(key=lambda x: (-x[0], x[1]))
+        valid_minima = [idx for _, idx in scored]
+
+    # 「なるべく下の谷から検出したい」ため、インデックスの小さい順（左側＝値が小さい方）にソートして上から n_minima 個取得
+    valid_minima.sort()
+    chosen_local = valid_minima[:n_minima]
+
+    # まだ足りない場合は等間隔フォールバック等で補う
+    if len(chosen_local) < n_minima:
         fallback = _equally_spaced_fallback(start, end, n_minima)
-        chosen_global = sorted(set(chosen_global) | set(fallback))
+        chosen_local = sorted(list(set(chosen_local) | set(fallback)))[:n_minima]
 
-    return chosen_global[:n_minima]
+    chosen_global = [start + idx for idx in chosen_local]
+    return sorted(chosen_global)
 
 
 def _equally_spaced_fallback(start, end, n_minima):
