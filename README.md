@@ -33,7 +33,7 @@ Analyzes a soft mask's value histogram and automatically finds meaningful thresh
 - **Outputs**
   - `mask_batch (x8)` — `MASK`, a batch of up to 8 binary masks, one per detected boundary
   - `mask` — `MASK`, the single binary mask selected by `threshold`
-  - `histogram_image` — `IMAGE`, a rendered histogram showing the detected peaks/valleys and which one was selected (also shown in the node preview)
+  - `histogram` — `IMAGE`, a rendered histogram showing the detected peaks/valleys and which one was selected (also shown in the node preview)
 
 Internally the node finds up to 5 valleys between histogram peaks plus up to 3 minor minima inside the largest peak, giving up to 8 candidate thresholds to choose from — useful for quickly comparing where different cutoffs land without re-running the graph.
 
@@ -66,7 +66,7 @@ Then restart ComfyUI.
 
 ## Credits
 
-- **Auto Mask Refine** is a simplified reimplementation of the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl), reduced to a single `preblur` parameter.
+- **Mask Refine** is a simplified reimplementation of the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl), reduced to a single `preblur` parameter.
 
 ## License
 
