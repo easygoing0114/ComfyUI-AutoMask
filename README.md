@@ -15,8 +15,16 @@ Custom nodes for ComfyUI that automatically refine and threshold masks — no ma
 <img width="800" height="666" alt="mask refine node sample" src="images/mask_refine_20260807.png">
 </div>
 
+**BiRefNet**
+
 <div align="center">
-<img width="600" height="305" alt="close up mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
+<img width="600" height="305" alt="close up mask and image" src="images/BirRefNet_compare_close_up.png">
+</div>
+
+**BiRefNet -> Mask Threshold = 0.01 -> Mask Refine**
+
+<div align="center">
+<img width="600" height="305" alt="close up refine mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
 </div>
 
 Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatting`](https://github.com/pymatting/pymatting)), guided by the source image.
@@ -26,7 +34,7 @@ Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatt
 - **Inputs**
   - `image` — `IMAGE`, the source image the mask was drawn on
   - `mask` — `MASK`, the rough/binary mask to refine
-  - `preblur` — `INT` (default `8`), Gaussian blur radius applied to the mask before it's converted into a trimap. Higher values soften hard mask edges before matting; `0` disables preblurring.
+  - `preblur` — `INT` (default `10`), Gaussian blur radius applied to the mask before it's converted into a trimap. Higher values soften hard mask edges before matting; `0` disables preblurring.
 - **Output**: `MASK` — a refined, soft alpha matte
 
 Use this after any rough segmentation (SAM, manual paint, threshold, etc.) to get cleaner edges, especially around hair, fur, or semi-transparent regions.
