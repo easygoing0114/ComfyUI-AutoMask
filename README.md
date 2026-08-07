@@ -30,7 +30,7 @@ Use this after any rough segmentation (SAM, manual paint, threshold, etc.) to ge
 ### Auto Mask Threshold
 
 <div align="center">
-<img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
+<img width="600" height="278" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
 </div>
 
 Analyzes a soft mask's value histogram and automatically finds meaningful threshold boundaries (valleys between peaks) instead of requiring a manually chosen cutoff.
@@ -49,7 +49,11 @@ Internally the node finds up to 5 valleys between histogram peaks plus up to 3 m
 
 ### Via ComfyUI Manager (recommended)
 
-Search for **"AutoMask"** in ComfyUI Manager and install.
+Search for **"easygoing"** in ComfyUI Manager and install.
+
+<div align="center">
+<img width="800" height="682" alt="comfyui extension search easygoing" src="images/comfyui_extension_search_easygoing_with_comment.png">
+</div>
 
 ### Manual
 
