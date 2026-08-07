@@ -16,7 +16,7 @@ Custom nodes for ComfyUI that automatically refine and threshold masks — no ma
 </div>
 
 <div align="center">
-<img width="400" height="203" alt="close up mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
+<img width="600" height="305" alt="close up mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
 </div>
 
 Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatting`](https://github.com/pymatting/pymatting)), guided by the source image.
