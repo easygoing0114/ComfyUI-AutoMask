@@ -15,6 +15,10 @@ Custom nodes for ComfyUI that automatically refine and threshold masks — no ma
 <img width="800" height="666" alt="mask refine node sample" src="images/mask_refine_20260807.png">
 </div>
 
+<div align="center">
+<img width="800" height="406" alt="close up mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
+</div>
+
 Refines a rough mask into a soft alpha matte using closed-form matting ([`pymatting`](https://github.com/pymatting/pymatting)), guided by the source image.
 
 > This node is a simplified implementation based on the **Image Matting** node from [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) by [spacepxl](https://github.com/spacepxl), with `preblur` kept as the only exposed setting.
@@ -30,7 +34,7 @@ Use this after any rough segmentation (SAM, manual paint, threshold, etc.) to ge
 ### Auto Mask Threshold
 
 <div align="center">
-<img width="600" height="278" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
+<img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
 </div>
 
 Analyzes a soft mask's value histogram and automatically finds meaningful threshold boundaries (valleys between peaks) instead of requiring a manually chosen cutoff.
@@ -52,7 +56,7 @@ Internally the node finds up to 5 valleys between histogram peaks plus up to 3 m
 Search for **"easygoing"** in ComfyUI Manager and install.
 
 <div align="center">
-<img width="800" height="682" alt="comfyui extension search easygoing" src="images/comfyui_extension_search_easygoing_with_comment.png">
+<img width="600" height="278" alt="comfyui extension search easygoing" src="images/comfyui_extension_search_easygoing_with_comment.png">
 </div>
 
 ### Manual
