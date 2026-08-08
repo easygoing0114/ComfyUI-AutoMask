@@ -1,11 +1,12 @@
 [project]
 name = "ComfyUI-AutoMask"
 description = "Automatic mask refinement and histogram-based multi-threshold nodes for ComfyUI by easygoing0114"
-version = "0.2.0"
+version = "0.2.1"
 license = { text = "MIT" }
 
 [project.urls]
 Repository = "https://github.com/easygoing0114/ComfyUI-AutoMask"
+Documentation = "https://www.ai-image-journey.com/2026/08/birefnet-depthanythingv3-sam31-lama.html"
 
 [tool.comfy]
 PublisherId = "easygoing0114"
