@@ -5,6 +5,8 @@
 
 # ComfyUI-AutoMask
 
+**Guide**: [English](https://www.ai-image-journey.com/2026/08/birefnet-depthanythingv3-sam31-lama.html) | [Japanese](https://note.com/ai_image_journey/n/nf45afca51b00)
+
 Custom nodes for ComfyUI that automatically refine and threshold masks — no manual trial-and-error with black/white points or fixed cutoff values.
 
 ## Nodes
