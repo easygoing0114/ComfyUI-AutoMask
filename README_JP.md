@@ -5,9 +5,9 @@
 # ComfyUI-AutoMask
 
 - [**英語版**](README.md)
-**ガイド（外部サイト）**: [English](https://www.ai-image-journey.com/2026/08/birefnet-depthanythingv3-sam31-lama.html) | [Japanese](https://note.com/ai_image_journey/n/nf45afca51b00)
+- **ガイド（外部サイト）**: [English](https://www.ai-image-journey.com/2026/08/birefnet-depthanythingv3-sam31-lama.html) | [Japanese](https://note.com/ai_image_journey/n/nf45afca51b00)
 
-ComfyUI用のカスタムノードです。マスクの自動調整と、ヒストグラムに基づく閾値の候補を自動で算出して、手動での試行錯誤の手間を軽減します。
+ComfyUIのカスタムノードです。マスクの境界を自動調整し、ヒストグラムに基づく閾値の候補を自動で算出して、手動での試行錯誤の手間を軽減します。
 
 ## ノード
 
@@ -29,14 +29,14 @@ ComfyUI用のカスタムノードです。マスクの自動調整と、ヒス�
 <img width="600" height="305" alt="close up refine mask and image" src="images/BirRefNet_bold_refine_compare_close_up.png">
 </div>
 
-粗いマスクを、元の画像をガイドとした閉形式マッティング（[`pymatting`](https://github.com/pymatting/pymatting)）を用いてリファインします。
+マスクを、元の画像をガイドとした閉形式マッティング（[`pymatting`](https://github.com/pymatting/pymatting)）を用いてリファインします。
 
 > このノードは、[spacepxl](https://github.com/spacepxl) 氏の [ComfyUI-Image-Filters](https://github.com/spacepxl/ComfyUI-Image-Filters) にある **Image Matting** ノードを基にした簡易実装です。
 
 - **入力**
   - `image` — `IMAGE`、元の画像
   - `mask` — `MASK`、リファイン対象のマスク
-  - `preblur` — `INT`（デフォルト `10`）、事前にマスクに適用するガウシアンブラーの半径。値が大きいほどマッティング前の硬いマスクエッジが柔らかくなります。`0` でプリブラーを無効化。
+  - `preblur` — `INT`（デフォルト `10`）、事前にマスクに適用するガウシアンブラーの半径、値が大きいほど硬い境界が柔らかく整います。`0` でプリブラーを無効化します。
 - **出力**: `MASK` — リファインされたマスク
 
 任意の粗いセグメンテーション（SAM 3.1、BiRefNet、手動マスク、閾値処理など）の後に使用すると、特に髪・毛皮・半透明領域などのエッジがきれいに整います。
@@ -47,7 +47,7 @@ ComfyUI用のカスタムノードです。マスクの自動調整と、ヒス�
 <img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_sample_20260808.png">
 </div>
 
-マスクのヒストグラムを解析して、ピーク間の谷などの意味のある閾値を自動で検出します。
+マスクのヒストグラムを解析して、意味のある閾値を自動で検出します。
 
 - **入力**
   - `mask` — `MASK`、ソフト（非バイナリ）マスク
@@ -57,7 +57,7 @@ ComfyUI用のカスタムノードです。マスクの自動調整と、ヒス�
   - `mask` — `MASK`、`threshold` で選択された単一のバイナリマスク
   - `histogram` — `IMAGE`、検出されたピーク／谷と選択された境界を示したヒストグラム画像（ノードプレビューにも表示）
 
-内部ではヒストグラムのピーク間の谷を最大5つ、さらに最大ピーク内の小さな極小値を最大3つ検出し、最大8つの候補閾値を提示します。異なるカットオフ位置を素早く比較するのに便利です。
+ヒストグラムのピーク間の谷を最大5つ、さらに最大ピーク内の小さな極小値を最大3つ検出し、最大8つの候補を提示します。異なるカットオフ値を素早く比較するのに便利です。
 
 ## インストール
 
@@ -71,7 +71,7 @@ Nodes Manager で **"easygoing"** と検索してインストールしてくだ�
 
 ### 手動インストール
 
-ComfyUI の Python 仮想環境を有効化した後：
+ComfyUI の Python 仮想環境を有効にした後：
 
 ```bash
 cd ComfyUI/custom_nodes
@@ -80,7 +80,7 @@ cd ComfyUI-AutoMask
 pip install -r requirements.txt
 ```
 
-## 必要なもの
+## 依存ライブラリ
 
 - ComfyUI
 - `opencv-python`
@@ -88,7 +88,7 @@ pip install -r requirements.txt
 - `pymatting`
 - `Pillow`
 
-（`torch` と `folder_paths` は ComfyUI 本体が提供します。）
+（`torch` と `folder_paths` は ComfyUI に含まれています。）
 
 ## クレジット
 
