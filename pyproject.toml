@@ -1,7 +1,7 @@
 [project]
 name = "ComfyUI-AutoMask"
 description = "Automatic mask refinement and histogram-based multi-threshold nodes for ComfyUI by easygoing0114"
-version = "0.1.7"
+version = "0.2.0"
 license = { text = "MIT" }
 
 [project.urls]

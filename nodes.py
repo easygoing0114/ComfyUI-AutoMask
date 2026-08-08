@@ -3,10 +3,11 @@ import cv2
 import random
 import numpy as np
 import torch
-import torch.nn.functional as F
 from PIL import Image, ImageDraw, ImageFont
 from pymatting import estimate_alpha_cf, fix_trimap
 import folder_paths
+
+from comfy_api.latest import ComfyExtension, io
 
 
 # ============================================================================
@@ -18,28 +19,34 @@ DEFAULT_WHITEPOINT = 0.99
 DEFAULT_MAX_ITERATIONS = 1000
 
 
-class MaskRefine:
+class MaskRefine(io.ComfyNode):
     """
     Node that refines an alpha matte from an image and a mask, with
     preblur as the only configurable setting.
     """
 
     @classmethod
-    def INPUT_TYPES(s):
-        return {
-            "required": {
-                "image": ("IMAGE",),
-                "mask": ("MASK",),
-                "preblur": ("INT", {"default": 10, "min": 0, "max": 256, "step": 1}),
-            },
-        }
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="AutoMask_MaskRefine",
+            display_name="Mask Refine",
+            category="AutoMask",
+            description=(
+                "Refines an alpha matte from an image and a mask, with "
+                "preblur as the only configurable setting."
+            ),
+            inputs=[
+                io.Image.Input("image"),
+                io.Mask.Input("mask"),
+                io.Int.Input("preblur", default=10, min=0, max=256, step=1),
+            ],
+            outputs=[
+                io.Mask.Output(display_name="mask"),
+            ],
+        )
 
-    RETURN_TYPES = ("MASK",)
-    RETURN_NAMES = ("mask",)
-    FUNCTION = "refine"
-    CATEGORY = "Image-Filters/mask"
-
-    def refine(self, image, mask, preblur):
+    @classmethod
+    def execute(cls, image, mask, preblur) -> io.NodeOutput:
         d = preblur * 2 + 1
 
         i_dup = image.cpu().numpy().astype(np.float64)
@@ -70,7 +77,7 @@ class MaskRefine:
 
             out[index] = alpha
 
-        return (torch.from_numpy(out.astype(np.float32)),)
+        return io.NodeOutput(torch.from_numpy(out.astype(np.float32)))
 
 
 # ============================================================================
@@ -427,35 +434,43 @@ def _render_histogram_image(hist, bin_edges, minima_idx, threshold_values, selec
     return img
 
 
-class AutoMaskThreshold:
-    CATEGORY = "mask/threshold"
-    FUNCTION = "run"
-    RETURN_TYPES = ("MASK", "MASK", "IMAGE")
-    RETURN_NAMES = ("mask_batch (x8)", "mask", "histgram")
-    OUTPUT_NODE = True
-
+class AutoMaskThreshold(io.ComfyNode):
     BINS = 256
     PEAKS_TARGET = 5
     MINOR_MINIMA_IN_LARGEST_PEAK = 3
     TOTAL_THRESHOLDS = PEAKS_TARGET + MINOR_MINIMA_IN_LARGEST_PEAK
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "mask": ("MASK",),
-                "threshold": ("INT", {
-                    "default": 5,
-                    "min": 1,
-                    "max": cls.TOTAL_THRESHOLDS,
-                    "step": 1,
-                    "tooltip": f"Selects the n-th boundary value (ascending, 1-{cls.TOTAL_THRESHOLDS}) as the single-mask output.",
-                }),
-            },
-        }
+    def define_schema(cls) -> io.Schema:
+        return io.Schema(
+            node_id="AutoMask_AutoMaskThreshold",
+            display_name="Auto Mask Threshold",
+            category="AutoMask",
+            is_output_node=True,
+            inputs=[
+                io.Mask.Input("mask"),
+                io.Int.Input(
+                    "threshold",
+                    default=5,
+                    min=1,
+                    max=cls.TOTAL_THRESHOLDS,
+                    step=1,
+                    tooltip=(
+                        f"Selects the n-th boundary value (ascending, 1-{cls.TOTAL_THRESHOLDS}) "
+                        "as the single-mask output."
+                    ),
+                ),
+            ],
+            outputs=[
+                io.Mask.Output(display_name="mask_batch (x8)"),
+                io.Mask.Output(display_name="mask"),
+                io.Image.Output(display_name="histogram"),
+            ],
+        )
 
-    def run(self, mask, threshold=5):
-        bins = self.BINS
+    @classmethod
+    def execute(cls, mask, threshold=5) -> io.NodeOutput:
+        bins = cls.BINS
 
         if mask.dim() == 2:
             mask = mask.unsqueeze(0)
@@ -468,7 +483,7 @@ class AutoMaskThreshold:
         centers = (bin_edges[:-1] + bin_edges[1:]) / 2.0
 
         regions, level = _find_peak_regions_by_level_cutoff(
-            hist, n_peaks_target=self.PEAKS_TARGET
+            hist, n_peaks_target=cls.PEAKS_TARGET
         )
 
         if len(regions) == 0:
@@ -486,21 +501,23 @@ class AutoMaskThreshold:
             largest_region = regions[largest_peak_region_i]
 
             minor_idx = _find_minor_minima_in_largest_peak(
-                hist, largest_region, n_minima=self.MINOR_MINIMA_IN_LARGEST_PEAK
+                hist, largest_region, n_minima=cls.MINOR_MINIMA_IN_LARGEST_PEAK
             )
 
             boundary_idx = sorted(set(valley_idx) | set(minor_idx))
 
-            if len(boundary_idx) < self.TOTAL_THRESHOLDS:
+            if len(boundary_idx) < cls.TOTAL_THRESHOLDS:
                 n = len(hist)
-                extra_needed = self.TOTAL_THRESHOLDS - len(boundary_idx)
+                extra_needed = cls.TOTAL_THRESHOLDS - len(boundary_idx)
                 candidates = [i for i in range(1, n - 1) if i not in boundary_idx]
+
                 def min_dist(i):
                     return min(abs(i - b) for b in boundary_idx) if boundary_idx else i
+
                 candidates.sort(key=min_dist, reverse=True)
                 boundary_idx = sorted(set(boundary_idx) | set(candidates[:extra_needed]))
 
-            boundary_idx = boundary_idx[:self.TOTAL_THRESHOLDS]
+            boundary_idx = boundary_idx[:cls.TOTAL_THRESHOLDS]
             threshold_values = [float(centers[idx]) for idx in boundary_idx]
 
         binary_masks = []
@@ -527,21 +544,28 @@ class AutoMaskThreshold:
         filename = f"auto_mask_threshold_{random.randint(0, 1000000)}.png"
         hist_pil.save(os.path.join(temp_dir, filename), compress_level=4)
 
-        return {
-            "ui": {
+        return io.NodeOutput(
+            mask_batch,
+            selected_mask,
+            hist_tensor,
+            ui={
                 "images": [{"filename": filename, "subfolder": "", "type": "temp"}],
                 "num_thresholds": [len(threshold_values)],
             },
-            "result": (mask_batch, selected_mask, hist_tensor),
-        }
+        )
 
 
-NODE_CLASS_MAPPINGS = {
-    "MaskRefine": MaskRefine,
-    "AutoMaskThreshold": AutoMaskThreshold,
-}
+# ============================================================================
+# Extension entry point
+# ============================================================================
 
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "MaskRefine": "Mask Refine",
-    "AutoMaskThreshold": "Auto Mask Threshold",
-}
+class AutoMaskExtension(ComfyExtension):
+    async def get_node_list(self) -> list[type[io.ComfyNode]]:
+        return [
+            MaskRefine,
+            AutoMaskThreshold,
+        ]
+
+
+async def comfy_entrypoint() -> AutoMaskExtension:
+    return AutoMaskExtension()
