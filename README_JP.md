@@ -96,4 +96,4 @@ pip install -r requirements.txt
 
 ## ライセンス
 
-[MIT](LICENSE)
+- [MIT](LICENSE)
