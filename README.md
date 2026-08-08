@@ -12,7 +12,7 @@ Custom nodes for ComfyUI that automatically refine and threshold masks — no ma
 ### Mask Refine
 
 <div align="center">
-<img width="800" height="666" alt="mask refine node sample" src="images/mask_refine_20260807.png">
+<img width="800" height="666" alt="mask refine node sample" src="images/birefnet_refine_20260808.png">
 </div>
 
 **BiRefNet**
@@ -42,7 +42,7 @@ Use this after any rough segmentation (SAM 3.1, BiRefNet, manual paint, threshol
 ### Auto Mask Threshold
 
 <div align="center">
-<img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_20260807.png">
+<img width="800" height="682" alt="auto mask threshold sample" src="images/auto_mask_threshold_sample_20260808.png">
 </div>
 
 Analyzes a soft mask's value histogram and automatically finds meaningful threshold boundaries (valleys between peaks) instead of requiring a manually chosen cutoff.
